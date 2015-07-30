@@ -25,6 +25,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-mocha-test": "^0.10.0",
     "grunt-nodemon": "^0.2.1",
+    "grunt-require": "^1.1.2",
     "grunt-shell": "^0.6.4",
     "knex": "~0.5.7",
     "mocha": "^1.17.1",
@@ -34,6 +35,7 @@
     "sqlite3": "^3.0.9"
   },
   "devDependencies": {
+    "grunt-require": "^1.1.2",
     "supertest": "^0.10.0"
   }
 }

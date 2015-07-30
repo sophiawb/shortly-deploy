@@ -4,11 +4,11 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     concat: {
       options: {
-        separator: ';\n'
+        separator: ';'
       },
       dist: {
-        src: ['**/*.js'], // ?????????
-        dest: 'app/<%= pkg.name %>.js' //????????
+        src: ['public/client/**/*.js'], // ?????????
+        dest: 'public/dist/<%= pkg.name %>.js' //????????
       },
     },
 
@@ -29,7 +29,7 @@ module.exports = function(grunt) {
 
     uglify: {
       build: {
-        src: 'app/<%= pkg.name %>.js', //????????
+        src: 'public/dist/<%= pkg.name %>.js', //????????
         dest: 'public/dist/<%= pkg.name %>.min.js' //???????? should be in public/dist
       }
     },
@@ -86,10 +86,12 @@ module.exports = function(grunt) {
         command: [
           'azure site scale mode standard shortly-sbsg',
           'git push azure master',//??,
-          'azure site log tail shortly-sbsg',
           'azure site browse',
-          'azure site scale mode free shortly-sbsg'
+          'azure site scale mode free shortly-sbsg',
+          'azure site log tail shortly-sbsg'
         ].join('&&')
+        //command: 'azure site scale mode standard shortly-sbsg',
+        // pushAzure: 'git push azure master'
       }
     }
   });
@@ -102,6 +104,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
+  grunt.loadNpmTasks('grunt-require');
 
   grunt.registerTask('server-dev', function (target) {
     // Running nodejs in a different process and displaying output on the main console
@@ -119,7 +122,7 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
   // Main grunt tasks
   ////////////////////////////////////////////////////
-
+  
   grunt.registerTask('test', [
     'jshint', // ???
     'mochaTest'
@@ -131,34 +134,17 @@ module.exports = function(grunt) {
     'cssmin'
   ]);
 
-  grunt.registerTask('upload', function(n) {
-    if(grunt.option('prod')) {
-      // add your production server task here
-      grunt.task.run(['shell:prodServer']);
+  grunt.registerTask('upload', function() {
+    if(grunt.option('prod')){
+      grunt.task.run(['shell:prodServer', /*'watch'*/]);
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
 
-  grunt.registerTask('deploy', function() {
-    this.requires('test');
-    grunt.task.run('build', 'upload');
-  });
-
-  // grunt.registerTask('foo', 'My "foo" task.', function() {
-  //   console.log("foo being run");
-  //   return false;
-  // });
-
-  // grunt.registerTask('bar', 'My "bar" task.', function() {
-  //   console.log("before bar requires foo");
-  //   // Fail task if "foo" task failed or never ran.
-  //   grunt.task.requires('foo');
-  //   // This code executes if the "foo" task ran successfully.
-  //   grunt.log.writeln('after bar requires foo');
-  // });
-
-
-
-
-};
+  grunt.registerTask('deploy', [
+    'test', 
+    'build', 
+    'upload'
+  ]);
+}
