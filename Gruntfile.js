@@ -3,6 +3,13 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      options: {
+        separator: ';\n'
+      },
+      dist: {
+        src: ['**/*.js'], // ?????????
+        dest: 'app/<%= pkg.name =%>.js' //????????
+      },
     },
 
     mochaTest: {
@@ -21,24 +28,40 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      build: {
+        src: 'app/<%= pkg.name =%>.js', //????????
+        dest: 'public/dist/<%= pkg.name =%>.min.js' //???????? should be in public/dist
+      }
     },
 
     jshint: {
       files: [
         // Add filespec list here
+        '**/*.js'
       ],
       options: {
         force: 'true',
         jshintrc: '.jshintrc',
         ignores: [
           'public/lib/**/*.js',
-          'public/dist/**/*.js'
+          'public/dist/**/*.js',
+          'Gruntfile.js',
+          'node_modules/**/*.js'
         ]
       }
     },
 
     cssmin: {
         // Add filespec list here
+      target: {
+        files: [{
+          expand: true,
+          cwd: 'public',
+          src: ['*.css', '!*.min.css'],
+          dest: 'public/dist',
+          ext: '.min.css'
+        }]
+      }
     },
 
     watch: {
@@ -60,6 +83,7 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+
       }
     },
   });
@@ -91,6 +115,7 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
 
   grunt.registerTask('test', [
+    'jshint', // ???
     'mochaTest'
   ]);
 
@@ -108,6 +133,8 @@ module.exports = function(grunt) {
   grunt.registerTask('deploy', [
       // add your production server task here
   ]);
+
+
 
 
 };
