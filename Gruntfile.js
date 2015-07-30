@@ -7,8 +7,8 @@ module.exports = function(grunt) {
         separator: ';'
       },
       dist: {
-        src: ['public/client/**/*.js'], // ?????????
-        dest: 'public/dist/<%= pkg.name %>.js' //????????
+        src: ['public/client/**/*.js'],
+        dest: 'public/dist/<%= pkg.name %>.js'
       },
     },
 
@@ -29,8 +29,8 @@ module.exports = function(grunt) {
 
     uglify: {
       build: {
-        src: 'public/dist/<%= pkg.name %>.js', //????????
-        dest: 'public/dist/<%= pkg.name %>.min.js' //???????? should be in public/dist
+        src: 'public/dist/<%= pkg.name %>.js',
+        dest: 'public/dist/<%= pkg.name %>.min.js'
       }
     },
 
@@ -85,13 +85,11 @@ module.exports = function(grunt) {
       prodServer: {
         command: [
           'azure site scale mode standard shortly-sbsg',
-          'git push azure master',//??,
+          'git push azure master',
           'azure site browse',
           'azure site scale mode free shortly-sbsg',
           'azure site log tail shortly-sbsg'
         ].join('&&')
-        //command: 'azure site scale mode standard shortly-sbsg',
-        // pushAzure: 'git push azure master'
       }
     }
   });
@@ -104,7 +102,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
-  grunt.loadNpmTasks('grunt-require');
 
   grunt.registerTask('server-dev', function (target) {
     // Running nodejs in a different process and displaying output on the main console
@@ -124,7 +121,7 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
   
   grunt.registerTask('test', [
-    'jshint', // ???
+    'jshint',
     'mochaTest'
   ]);
 
@@ -136,7 +133,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('upload', function() {
     if(grunt.option('prod')){
-      grunt.task.run(['shell:prodServer', /*'watch'*/]);
+      grunt.task.run(['shell:prodServer']);
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
