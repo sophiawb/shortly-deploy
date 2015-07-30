@@ -8,7 +8,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: ['**/*.js'], // ?????????
-        dest: 'app/<%= pkg.name =%>.js' //????????
+        dest: 'app/<%= pkg.name %>.js' //????????
       },
     },
 
@@ -29,8 +29,8 @@ module.exports = function(grunt) {
 
     uglify: {
       build: {
-        src: 'app/<%= pkg.name =%>.js', //????????
-        dest: 'public/dist/<%= pkg.name =%>.min.js' //???????? should be in public/dist
+        src: 'app/<%= pkg.name %>.js', //????????
+        dest: 'public/dist/<%= pkg.name %>.min.js' //???????? should be in public/dist
       }
     },
 
@@ -83,9 +83,15 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
-
+        command: [
+          'azure site scale mode standard shortly-sbsg',
+          'git push azure master',//??,
+          'azure site log tail shortly-sbsg',
+          'azure site browse',
+          'azure site scale mode free shortly-sbsg'
+        ].join('&&')
       }
-    },
+    }
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -120,19 +126,37 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
+    'concat',
+    'uglify',
+    'cssmin'
   ]);
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
       // add your production server task here
+      grunt.task.run(['shell:prodServer']);
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
 
-  grunt.registerTask('deploy', [
-      // add your production server task here
-  ]);
+  grunt.registerTask('deploy', function() {
+    this.requires('test');
+    grunt.task.run('build', 'upload');
+  });
+
+  // grunt.registerTask('foo', 'My "foo" task.', function() {
+  //   console.log("foo being run");
+  //   return false;
+  // });
+
+  // grunt.registerTask('bar', 'My "bar" task.', function() {
+  //   console.log("before bar requires foo");
+  //   // Fail task if "foo" task failed or never ran.
+  //   grunt.task.requires('foo');
+  //   // This code executes if the "foo" task ran successfully.
+  //   grunt.log.writeln('after bar requires foo');
+  // });
 
 
 
