@@ -8,6 +8,7 @@
   "private": true,
   "dependencies": {
     "amdefine": "^1.0.0",
+    "backbone": "^1.2.1",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "1.0.8",
     "bookshelf": "~0.6.4",
@@ -35,7 +36,6 @@
     "sqlite3": "^3.0.9"
   },
   "devDependencies": {
-    "grunt-require": "^1.1.2",
     "supertest": "^0.10.0"
   }
 }
